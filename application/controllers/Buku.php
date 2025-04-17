@@ -8,53 +8,50 @@ class Buku extends CI_Controller {
 
     public function index() {
         $this->load->library('pagination');
-
-    $keyword = $this->input->get('keyword');
-    $kategori = $this->input->get('kategori');
-
-    $config['base_url'] = site_url('buku/index');
-    $config['total_rows'] = $this->Buku_model->countAll($keyword, $kategori);
-    $config['per_page'] = 8;
-    $config['uri_segment'] = 3;
-
-    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
-    $config['full_tag_close'] = '</ul>';
-    $config['first_link'] = 'First';
-    $config['last_link'] = 'Last';
-    $config['first_tag_open'] = '<li class="page-item"><span class="page-link">';
-    $config['first_tag_close'] = '</span></li>';
-    $config['prev_tag_open'] = '<li class="page-item"><span class="page-link">';
-    $config['prev_tag_close'] = '</span></li>';
-    $config['next_tag_open'] = '<li class="page-item"><span class="page-link">';
-    $config['next_tag_close'] = '</span></li>';
-    $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
-    $config['last_tag_close'] = '</span></li>';
-    $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
-    $config['cur_tag_close'] = '</span></li>';
-    $config['num_tag_open'] = '<li class="page-item"><span class="page-link">';
-    $config['num_tag_close'] = '</span></li>';
-
-    $this->pagination->initialize($config);
-    $uri_segment = $this->uri->segment(3);
-    $config['uri_segment'] = (ctype_digit((string)$uri_segment)) ? 3 : 0;
-
-
-    $page = ($this->uri->segment($config['uri_segment']) !== null) ? $this->uri->segment($config['uri_segment']) : 0;
-
-
-
-
-    $data['buku'] = $this->Buku_model->get_buku_paginated($config['per_page'], $page);
+    
+        $keyword = $this->input->get('keyword');
+        $kategori = $this->input->get('kategori');
+    
+        $config['base_url'] = site_url('buku/index');
+        $config['total_rows'] = $this->Buku_model->countAll($keyword, $kategori);
+        $config['per_page'] = 8;
+        $config['uri_segment'] = 3;
+        $config['reuse_query_string'] = TRUE; // agar parameter GET tetap ada saat klik pagination
+    
+        // Pagination Style
+        $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_link'] = 'First';
+        $config['last_link'] = 'Last';
+        $config['first_tag_open'] = '<li class="page-item"><span class="page-link">';
+        $config['first_tag_close'] = '</span></li>';
+        $config['prev_tag_open'] = '<li class="page-item"><span class="page-link">';
+        $config['prev_tag_close'] = '</span></li>';
+        $config['next_tag_open'] = '<li class="page-item"><span class="page-link">';
+        $config['next_tag_close'] = '</span></li>';
+        $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
+        $config['last_tag_close'] = '</span></li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close'] = '</span></li>';
+        $config['num_tag_open'] = '<li class="page-item"><span class="page-link">';
+        $config['num_tag_close'] = '</span></li>';
+    
+        $this->pagination->initialize($config);
+    
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+    
+        // Kirim keyword dan kategori ke model
+        $data['buku'] = $this->Buku_model->get_buku_paginated($config['per_page'], $page, $keyword, $kategori);
         $data['kategori'] = $this->Kategori_model->getAll();
         $data['pagination'] = $this->pagination->create_links();
+        $data['keyword'] = $keyword;
+        $data['kategori_selected'] = $kategori;
+    
         $this->load->view('templates/header');
         $this->load->view('buku/index', $data);
-        
         $this->load->view('templates/footer');
-
-        // In your controller method that fetches books
-
     }
+    
 
     public function tambah() {
         $data['kategori'] = $this->Kategori_model->getAll();

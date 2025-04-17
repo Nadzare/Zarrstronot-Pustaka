@@ -215,33 +215,32 @@
         </div>
 
         <div class="search-box">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-6">
-                    <label for="keyword" class="form-label fw-semibold" style="color: var(--library-wood);">Cari Buku</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Judul, pengarang, atau kata kunci..." value="<?= isset($_GET['keyword']) ? $_GET['keyword'] : '' ?>">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="kategori" class="form-label fw-semibold" style="color: var(--library-wood);">Kategori</label>
-                    <select name="kategori" id="kategori" class="form-select">
-                        <option value="">-- Semua Kategori --</option>
-                        <?php foreach ($kategori as $k): ?>
-                            <option value="<?= $k->id ?>" <?= (isset($_GET['kategori']) && $_GET['kategori'] == $k->id) ? 'selected' : '' ?>>
-                                <?= $k->nama_kategori ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-2 d-grid">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter me-2"></i>Filter
-                    </button>
-                </div>
-            </form>
+        <form action="<?= base_url('buku') ?>" method="GET" class="row mb-4 g-3">
+    <div class="col-md-6">
+        <label for="keyword" class="form-label fw-semibold" style="color: var(--library-wood);">Cari Buku</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Judul, pengarang, atau kata kunci..." value="<?= htmlspecialchars($keyword ?? '') ?>">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="kategori" class="form-label fw-semibold" style="color: var(--library-wood);">Kategori</label>
+        <select name="kategori" id="kategori" class="form-select">
+            <option value="">-- Semua Kategori --</option>
+            <?php foreach ($kategori as $k): ?>
+                <option value="<?= $k->id ?>" <?= ($kategori_selected == $k->id) ? 'selected' : '' ?>>
+                    <?= $k->nama_kategori ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
+    </div>
+</form>
+
         </div>
 
         <?php if (empty($buku)): ?>

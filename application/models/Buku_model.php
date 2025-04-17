@@ -30,14 +30,26 @@ class Buku_model extends CI_Model {
         return $this->db->count_all_results('buku');
     }
 
-    public function get_buku_paginated($limit, $start)
-{
-    $this->db->select('buku.*, kategori.nama_kategori');
-    $this->db->from('buku');
-    $this->db->join('kategori', 'kategori.id = buku.kategori_id');
-    $this->db->limit($limit, $start);
-    return $this->db->get()->result();
-}
+    public function get_buku_paginated($limit, $start, $keyword = null, $kategori = null)
+    {
+        if ($keyword) {
+            $this->db->group_start();
+            $this->db->like('judul', $keyword);
+            $this->db->or_like('pengarang', $keyword);
+            $this->db->group_end();
+        }
+    
+        if ($kategori) {
+            $this->db->where('kategori_id', $kategori);
+        }
+    
+        $this->db->limit($limit, $start);
+        $this->db->select('buku.*, kategori.nama_kategori');
+        $this->db->from('buku');
+        $this->db->join('kategori', 'kategori.id = buku.kategori_id');
+        return $this->db->get()->result();
+    }
+    
 
 
 

@@ -14,7 +14,7 @@ class Buku extends CI_Controller {
 
     $config['base_url'] = site_url('buku/index');
     $config['total_rows'] = $this->Buku_model->countAll($keyword, $kategori);
-    $config['per_page'] = 5;
+    $config['per_page'] = 8;
     $config['uri_segment'] = 3;
 
     $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
